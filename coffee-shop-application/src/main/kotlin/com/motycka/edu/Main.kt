@@ -5,25 +5,24 @@ import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.javatime.datetime
 
 fun main(args: Array<String>) {
-
-
+    // Entry point left empty intentionally
 }
-
 
 object MenuItemTable : LongIdTable("menu_item") {
     val name = text("name")
     val description = text("description")
     val price = double("price")
-    val isDeleted = bool("is_deleted").default(false)
+    val deletedFlag = bool("is_deleted").default(false)
 }
 
-object OrderTable : LongIdTable("menu_item") {
+object OrderTable : LongIdTable("orders") {
     val customerName = text("customer_name")
-    val orderDate = datetime("order_date")
-    val totalAmount = double("total_amount")
+    val orderTimestamp = datetime("order_date")
+    val totalPrice = double("total_amount")
 }
 
-object OrderItemTable : Table("order_item") {
-    val menuItemId = long("id").references(MenuItemTable.id)
-    val orderId = long("order_id").references(OrderTable.id)
+object OrderItemTable : LongIdTable("order_item") {
+    val menuItemRef = reference("menu_item_id", MenuItemTable.id)
+    val orderRef = reference("order_id", OrderTable.id)
+    val quantity = integer("quantity")
 }
